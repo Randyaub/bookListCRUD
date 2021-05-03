@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
+const booksRouter = require("./api/routes/books");
 require("dotenv").config();
 
 const app = express();
@@ -9,8 +10,15 @@ const app = express();
 app.use(morgan("dev"));
 app.use(helmet());
 
+//routes
+app.use("/books", booksRouter);
+
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome" });
+  res.status(200).json({ message: "Welcome" });
+});
+
+app.get("*", (req, res) => {
+  res.status(404).json({ message: "Resource not found" });
 });
 
 const PORT = process.env.PORT;
