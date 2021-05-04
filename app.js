@@ -9,9 +9,10 @@ const app = express();
 //middlewares
 app.use(morgan("dev"));
 app.use(helmet());
+app.use(express.json());
 
 //routes
-app.use("/books", booksRouter);
+app.use("/api/books", booksRouter);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the books api" });
