@@ -109,8 +109,35 @@ const updateBook = async (req, res) => {
   }
 };
 
-const deleteBook = (req, res) => {
-  const { id } = req.params;
+const deleteBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rows, rowCount } = await db.query(
+      `
+      DELETE FROM 
+          books 
+      WHERE 
+          book_id = $1
+      RETURNING *
+      `,
+      [id]
+    );
+    if (rowCount === 0) {
+      return res
+        .status(200)
+        .json({ message: "There does not exist a book with that ID" });
+    } else {
+      return res
+        .status(200)
+        .json({ message: "The following book was deleted", book: rows });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "There was an error", error: error.message });
+    console.log(error);
+  }
+
   res.status(200).json({ message: `Deleted book ${id}` });
 };
 
