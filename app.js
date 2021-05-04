@@ -14,7 +14,7 @@ app.use(helmet());
 app.use("/books", booksRouter);
 
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Welcome" });
+  res.status(200).json({ message: "Welcome to the books api" });
 });
 
 app.get("*", (req, res) => {
