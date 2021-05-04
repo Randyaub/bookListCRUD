@@ -38,6 +38,39 @@ const getSpecificBook = async (req, res) => {
   }
 };
 
+const createBook = async (req, res) => {
+  try {
+    const {
+      publisher_id,
+      title,
+      total_pages,
+      rating,
+      isbn_13,
+      published_date,
+    } = req.body;
+    const { rows, rowCount } = await db.query(
+      `
+      INSERT INTO books 
+          (publisher_id, title, total_pages, rating, isbn_13, published_date) 
+      VALUES 
+          ($1, $2, $3, $4, $5, $6)
+      RETURNING *
+      `,
+      [publisher_id, title, total_pages, rating, isbn_13, published_date]
+    );
+    if (rowCount === 0) {
+      return res.status(500).json({ message: "The book was not created" });
+    } else {
+      res.status(200).json({ message: "Book created", book: rows });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "There was an error", error: error.message });
+    console.log(error);
+  }
+};
+
 // ADD THE ABILITY TO CHANGE PUBLISHER LATER
 
 const updateBook = async (req, res) => {
@@ -81,4 +114,10 @@ const deleteBook = (req, res) => {
   res.status(200).json({ message: `Deleted book ${id}` });
 };
 
-module.exports = { getBooks, getSpecificBook, updateBook, deleteBook };
+module.exports = {
+  getBooks,
+  getSpecificBook,
+  createBook,
+  updateBook,
+  deleteBook,
+};
