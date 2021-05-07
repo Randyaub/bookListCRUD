@@ -18,7 +18,8 @@ const getBooks = async (req, res) => {
 
 const getSpecificBook = async (req, res) => {
   try {
-    const { id } = req.params;
+    let { id } = req.params;
+    id = id.replace(":", "");
     const {
       rows,
       rowCount,
@@ -75,7 +76,8 @@ const createBook = async (req, res) => {
 
 const updateBook = async (req, res) => {
   try {
-    const { id } = req.params;
+    let { id } = req.params;
+    id = id.replace(":", "");
     const { title, total_pages, rating, isbn_13, published_date } = req.body;
 
     const { rows, rowCount } = await db.query(
@@ -111,7 +113,9 @@ const updateBook = async (req, res) => {
 
 const deleteBook = async (req, res) => {
   try {
-    const { id } = req.params;
+    let { id } = req.params;
+    id = id.replace(":", "");
+
     const { rows, rowCount } = await db.query(
       `
       DELETE FROM 
